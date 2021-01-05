@@ -1,0 +1,67 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "InputOffsetControl"
+DATATYPE = "Point"
+BTN_WIDTH = 0.33333
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Example",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "A OffsetControl InputControl.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+
+    -- https://www.steakunderwater.com/VFXPedia/96.0.243.189/index8738.html?title=Eyeon:Script/Reference/Applications/Fuse/Classes/Input/OffsetControl
+    InOffsetControl = self:AddInput(
+        "OffsetControl UI",
+        "OffsetControl",
+        {
+            INPID_InputControl = "OffsetControl",
+            LINKID_DataType = "Point",
+        }
+    )
+
+    OutPoint = self:AddOutput(
+        "Output",
+        "Output",
+        {
+            LINKID_DataType = "Point",
+            LINK_Main = 1
+        }
+    )
+
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+
+end
+
+function Process(req)
+
+    -- [[ Creates the output. ]]
+    local n = InOffsetControl:GetValue( req ).Value
+
+    OutPoint: Set( req , Point( n ) )
+
+end

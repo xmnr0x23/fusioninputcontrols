@@ -1,0 +1,65 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "InputSpacerControl"
+DATATYPE = "Number"
+BTN_WIDTH = 0.33333
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Example",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "A SpacerControl InputControl.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+
+    InSpacerControl = self:AddInput(
+        "SpacerControl UI",
+        "SpacerControl",
+        {
+            INPID_InputControl = "SpacerControl",
+        }
+    )
+
+    OutNumber = self:AddOutput(
+        "Output",
+        "Output",
+        {
+            LINKID_DataType = "Number",
+            LINK_Main = 1
+        }
+    )
+
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+
+end
+
+function Process(req)
+
+    -- [[ Creates the output. ]]
+    local n = InSpacerControl:GetValue( req ).Value
+
+    OutNumber: Set( req , Number( n ) )
+
+end

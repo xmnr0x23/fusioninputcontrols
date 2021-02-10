@@ -1,0 +1,67 @@
+-- ============================================================================
+-- constants
+-- ============================================================================
+FUSE_NAME = "InputGradientControl"
+DATATYPE = "Number"
+BTN_WIDTH = 0.33333
+
+-- ============================================================================
+-- fuse
+-- ============================================================================
+FuRegisterClass(FUSE_NAME, CT_Tool, {
+    REGID_DataType = DATATYPE,
+    REGID_InputDataType = DATATYPE,
+    REG_NoCommonCtrls = true,
+    REGS_Category = "Vonk\\Example",
+    REGS_Name = FUSE_NAME,
+    REGS_OpDescription = "A GradientControl InputControl.",
+    REGS_OpIconString = FUSE_NAME
+})
+
+function Create()
+
+    InGradientControl = self:AddInput(
+        "GradientControl UI",
+        "GradientControl",
+        {
+            INPID_InputControl = "GradientControl",
+            LINKID_DataType = "Gradient",
+        }
+    )
+
+    OutGradient = self:AddOutput(
+        "Output",
+        "Output",
+        {
+            LINKID_DataType = "Gradient",
+            LINK_Main = 1
+        }
+    )
+
+end
+
+function NotifyChanged(inp, param, time)
+    --[[
+        Handles all input control events.
+
+        :param inp: Input that triggered a signal.
+        :type inp: Input
+
+        :param param: Parameter object holding the (new) value.
+        :type param: Parameter
+
+        :param time: Current frame number.
+        :type time: float
+    ]]
+
+end
+
+function Process(req)
+
+    -- [[ Creates the output. ]]
+    local temp = InGradientControl:GetSource( req.Time )
+    dump( temp )
+
+    OutGradient: Set( req , temp )
+
+end
